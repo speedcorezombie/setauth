@@ -55,7 +55,7 @@ foreach my $vhip (@vhosts_ip) {
 		$document_root = $vhost_context->cmd_config('DocumentRoot');
 		
 		# Looking admin dir
-		if -d ("$document_root/$admin_path") {
+		if (-d "$document_root/$admin_path") {
 			print "admin FOUND: $document_root/$admin_path\n";
 		}
 
