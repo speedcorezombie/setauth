@@ -28,6 +28,11 @@ my @server_alias;
 # DocumentRoot
 my $document_root;
 
+# Path to administrator directory
+my $admin_path;
+
+# Set admin dir path (relative)
+$admin_path = "administrator";
 # Set config file path
 $httpd_conf = "/usr/local/apache/conf/httpd.conf";                                                                                                          
                                                                                                                                                             
@@ -41,12 +46,19 @@ $apache_conf = Apache::ConfigFile->read(file => $httpd_conf,
 # Get array of VirtualHost ips and process each
 @vhosts_ip = $apache_conf->cmd_context('VirtualHost');
 foreach my $vhip (@vhosts_ip) {
-	# Get array of VirtualHost on this ip
+	# Get array of VirtualHost on this ip and process each
 	@vhosts = $apache_conf->cmd_context(VirtualHost => $vhip);
 	foreach $vhost_context (@vhosts) {
+		# Get ServerName, ServerAlias and DocumentRoot
 		$server_name   = $vhost_context->cmd_config('ServerName');
 		@server_alias  = $vhost_context->cmd_config('ServerAlias');
 		$document_root = $vhost_context->cmd_config('DocumentRoot');
+		
+		# Looking admin dir
+		if -d "$document_root/$admin_path" {
+			print "admin FOUND: $document_root/$admin_path\n";
+		}
+
 	}
 }
 
