@@ -30,7 +30,10 @@ my $document_root;
 
 # Path to administrator directory
 my $admin_path;
+# File handler
 my $htaccess;
+# Auth present flag
+my $auth_present;
 
 # Set admin dir path (relative)
 $admin_path = "administrator";
@@ -61,9 +64,20 @@ foreach my $vhip (@vhosts_ip) {
 			# Search .htaccess
 			if (-f "$document_root/$admin_path/.htaccess") {
 				open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
-					while ($htaccess) {
-						
+				$auth_present = 0;
+				# Search .htaccess for Auth
+				while ($htaccess) {
+					if ($_ =~ /AuthType/i) {
+						$auth_present = 1;
+						last;
 					}
+				}
+				if (!$auth_present) {
+					print "I want insert Auth in $document_root/$admin_path/.htaccess\n";
+				}
+				else {
+					print "There is Auth: $document_root/$admin_path/.htaccess\n";
+				}
 			}
 		}
 
