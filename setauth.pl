@@ -39,7 +39,7 @@ my $auth_present;
 my $htpasswd_path;
 
 # Authentiation directives
-my $auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n"
+my $auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
 
 # Set admin dir path (relative)
 $admin_path = "administrator";
