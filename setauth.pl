@@ -66,8 +66,8 @@ foreach my $vhip (@vhosts_ip) {
 				open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
 				$auth_present = 0;
 				# Search .htaccess for Auth
-				while ($htaccess) {
-					if ($_ =~ /"AuthType"/i) {
+				while (<$htaccess>) {
+					if ($_ =~ /AuthType/i) {
 						$auth_present = 1;
 						last;
 					}
