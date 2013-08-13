@@ -30,9 +30,11 @@ my $document_root;
 
 # Path to administrator directory
 my $admin_path;
+my $htaccess;
 
 # Set admin dir path (relative)
 $admin_path = "administrator";
+
 # Set config file path
 $httpd_conf = "/usr/local/apache/conf/httpd.conf";                                                                                                          
                                                                                                                                                             
@@ -54,9 +56,15 @@ foreach my $vhip (@vhosts_ip) {
 		@server_alias  = $vhost_context->cmd_config('ServerAlias');
 		$document_root = $vhost_context->cmd_config('DocumentRoot');
 		
-		# Looking admin dir
+		# Search admin dir
 		if (-d "$document_root/$admin_path") {
-			print "admin FOUND: $document_root/$admin_path\n";
+			# Search .htaccess
+			if (-f "$document_root/$admin_path/.htaccess") {
+				open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
+					while ($htaccess) {
+						
+					}
+			}
 		}
 
 	}
