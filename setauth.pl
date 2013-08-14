@@ -68,23 +68,22 @@ foreach my $vhip (@vhosts_ip) {
 		# Search admin dir
 		if (-d "$document_root/$admin_path") {
 			# Search .htaccess
-			if (-f "$document_root/$admin_path/.htaccess") {
-				open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
-				$auth_present = 0;
-				# Search .htaccess for Auth
-				while (<$htaccess>) {
-					if ($_ =~ /AuthType/i) {
-						$auth_present = 1;
-						last;
-					}
-				}
-				if (!$auth_present) {
-					print "I want insert Auth in $document_root/$admin_path/.htaccess\n";
-				}
-				else {
-					print "There is Auth: $document_root/$admin_path/.htaccess\n";
+			open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
+			$auth_present = 0;
+			# Search .htaccess for Auth
+			while (<$htaccess>) {
+				if ($_ =~ /AuthType/i) {
+					$auth_present = 1;
+					last;
 				}
 			}
+			# 
+			if (!$auth_present) {
+				print "I want insert Auth in $document_root/$admin_path/.htaccess\n";
+			} else {
+				print "There is Auth: $document_root/$admin_path/.htaccess\n";
+			}
+			close ($htaccess);
 		}
 
 	}
