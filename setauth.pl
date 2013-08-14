@@ -97,8 +97,9 @@ foreach my $vhip (@vhosts_ip) {
 			} else {
 				# If in not - create it
 				open($htaccess, ">", "$document_root/$admin_path/.htaccess") or next;
-				auth_insert();
-				close ($htaccess);
+				auth_insert($htaccess);
+
+				close ();
 			}			
 		}
 	}
@@ -110,4 +111,5 @@ sub auth_insert {
     $username = $1;
 	$htpasswd_path = "/home/$username";
 	$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
+	chown $username, $username, "$document_root/$admin_path/.htaccess";
 }
