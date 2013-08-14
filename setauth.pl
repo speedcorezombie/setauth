@@ -30,8 +30,9 @@ my $document_root;
 
 # Path to administrator directory
 my $admin_path;
-# File handler
+# File handlers
 my $htaccess;
+my $htpasswd;
 # Auth present flag
 my $auth_present;
 
@@ -39,7 +40,13 @@ my $auth_present;
 my $htpasswd_path;
 
 # Authentiation directives
-my $auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
+my $auth;
+
+# User and auth data
+my $username;
+my $login;
+my $passwdord;
+my $hash;
 
 # Set admin dir path (relative)
 $admin_path = "administrator";
@@ -77,11 +84,12 @@ foreach my $vhip (@vhosts_ip) {
 					last;
 				}
 			}
-			# 
+			# If there is no Auth - insert it
 			if (!$auth_present) {
-				print "I want insert Auth in $document_root/$admin_path/.htaccess\n";
-			} else {
-				print "There is Auth: $document_root/$admin_path/.htaccess\n";
+				print "I want to insert Auth in $document_root/$admin_path/.htaccess\n";
+				$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
+				$document_root =~ /\/(cp\d{6})\//;
+				$username = $1;
 			}
 			close ($htaccess);
 		}
