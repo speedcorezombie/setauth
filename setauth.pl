@@ -75,7 +75,7 @@ foreach my $vhip (@vhosts_ip) {
 		# Search admin dir
 		if (-d "$document_root/$admin_path") {
 			# Search .htaccess
-			open($htaccess, "+<", "$document_root/$admin_path/.htaccess" ) or next;
+			open($htaccess, "+>>", "$document_root/$admin_path/.htaccess" ) or next;
 			$auth_present = 0;
 			# Search .htaccess for Auth
 			while (<$htaccess>) {
@@ -87,9 +87,12 @@ foreach my $vhip (@vhosts_ip) {
 			# If there is no Auth - insert it
 			if (!$auth_present) {
 				print "I want to insert Auth in $document_root/$admin_path/.htaccess\n";
-				$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
-				$document_root =~ /\/(cp\d{6})\//;
-				$username = $1;
+#				$document_root =~ /\/(cp\d{6})\//;
+#				$username = $1;
+#				$htpasswd_path = "/home/$username";
+#				$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
+			} else {
+				print "There is Auth: $document_root/$admin_path/.htaccess\n";
 			}
 			close ($htaccess);
 		}
