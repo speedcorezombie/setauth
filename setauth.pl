@@ -111,5 +111,7 @@ sub auth_insert {
     $username = $1;
 	$htpasswd_path = "/home/$username";
 	$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
-	chown $username, $username, "$document_root/$admin_path/.htaccess";
+	my $uid = getpwnam($username);
+	my $gid = getgrnam($username);
+	chown $uid, $gid, "$document_root/$admin_path/.htaccess";
 }
