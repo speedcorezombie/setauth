@@ -118,7 +118,8 @@ sub auth_insert {
 	my $htpasswd;
 	print "I want to insert Auth in $document_root/$admin_path/.htaccess\n";
 	print $authdata "\t<host>\n";
-	$document_root =~ /home\/(cp\d{6})\/public/;
+    $document_root =~ /home\/(.*)\/public_html/;
+#	$document_root =~ /home\/(cp\d{6})\/public/;
     $username = $1;
 	$htpasswd_path = "/home/$username";
 	$password = `/usr/bin/pwgen -n1`;
