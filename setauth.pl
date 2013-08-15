@@ -112,7 +112,7 @@ sub auth_insert {
 	$document_root =~ /home\/(cp\d{6})\/public/;
     $username = $1;
 	$htpasswd_path = "/home/$username";
-	$password = system("/usr/bin/pwgen -n1");
+	$password = `/usr/bin/pwgen -n1`;
 	$hash = crypt($password, $username);
 	$login = "admin";
 	open ($htpasswd, ">>", "$htpasswd_path/.htpasswd") or die;
