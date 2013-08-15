@@ -51,7 +51,7 @@ my $hash;
 my $auth_data_file;
 my $authdata;
 
-my $auth_data_file = "/root/authdata.xml"
+$auth_data_file = "/root/authdata.xml"
 open ($authdata, ">>", $auth_data_file);
 print $authdata "<http_auth>\n";
 
