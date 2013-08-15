@@ -47,12 +47,21 @@ my $login;
 my $password;
 my $hash;
 
+# File for authentication data
+my $auth_data_file;
+my $authdata;
+
+my $auth_data_file = "/root/authdata.xml"
+open ($authdata, ">>", $auth_data_file);
+print $authdata "<http_auth>\n";
+
 # Set admin dir path (relative)
 $admin_path = "administrator";
 
 # Set config file path
 $httpd_conf = "/usr/local/apache/conf/httpd.conf";                                                                                                          
-                                                                                                                                                            
+                                                      
+                                                                                                      
 # Parse configuration                                                                                                                                       
 $apache_conf = Apache::ConfigFile->read(file => $httpd_conf,
 										ignore_case  => 1,
@@ -96,7 +105,7 @@ foreach my $vhip (@vhosts_ip) {
 			} else {
 				# If in not - create it
 				open($htaccess, ">", "$document_root/$admin_path/.htaccess") or next;
-				auth_insert($htaccess);
+				auth_insert();
 
 				close ();
 			}			
@@ -107,8 +116,8 @@ foreach my $vhip (@vhosts_ip) {
 sub auth_insert {
 	# .htpasswd file handler
 	my $htpasswd;
-	my $htaccess = shift(@_);
 	print "I want to insert Auth in $document_root/$admin_path/.htaccess\n";
+	print $authdata "\t<host>\n";
 	$document_root =~ /home\/(cp\d{6})\/public/;
     $username = $1;
 	$htpasswd_path = "/home/$username";
@@ -116,6 +125,13 @@ sub auth_insert {
 	$hash = crypt($password, $username);
 	$login = "admin";
 	open ($htpasswd, ">>", "$htpasswd_path/.htpasswd") or die;
+	print $authdata "\t\t<username>$username</username>\n";
+	print $authdata "\t\t<site>$server_name</site>\n";
+	foreach my $alias (@server_alias) {
+		print $authdata "\t\t<alias>$alias</alias>\n";
+	}
+	print $authdata "\t\t<login>$login</login>\n";
+	print $authdata "\t\t<password>$password</password>\n";
 	print $htpasswd "$login:$hash\n";
 	$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
 	print $htaccess $auth;
@@ -123,4 +139,5 @@ sub auth_insert {
 	my $gid = getgrnam($username);
 	chown $uid, $gid, "$document_root/$admin_path/.htaccess";
 	chown $uid, $gid, "$htpasswd_path/.htpasswd";
+	print $authdata "\t</host>\n";
 }
