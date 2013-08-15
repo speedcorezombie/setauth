@@ -112,6 +112,7 @@ foreach my $vhip (@vhosts_ip) {
 		}
 	}
 }
+print $authdata "</http_auth>\n";
 
 sub auth_insert {
 	# .htpasswd file handler
