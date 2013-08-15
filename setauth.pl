@@ -52,7 +52,7 @@ my $auth_data_file;
 my $authdata;
 
 $auth_data_file = "/root/authdata.xml";
-open ($authdata, ">>", $auth_data_file);
+open ($authdata, ">", $auth_data_file);
 print $authdata "<http_auth>\n";
 
 # Set admin dir path (relative)
