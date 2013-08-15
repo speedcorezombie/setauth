@@ -32,7 +32,6 @@ my $document_root;
 my $admin_path;
 # File handlers
 my $htaccess;
-my $htpasswd;
 # Auth present flag
 my $auth_present;
 
@@ -45,7 +44,7 @@ my $auth;
 # User and auth data
 my $username;
 my $login;
-my $passwdord;
+my $password;
 my $hash;
 
 # Set admin dir path (relative)
@@ -106,12 +105,22 @@ foreach my $vhip (@vhosts_ip) {
 }
 
 sub auth_insert {
+	# .htpasswd file handler
+	my $htpasswd;
+	my $htaccess = shift(@_);
 	print "I want to insert Auth in $document_root/$admin_path/.htaccess\n";
-	$document_root =~ /\/(cp\d{6})\//;
+	$document_root =~ /home\/(cp\d{6})\/public/;
     $username = $1;
 	$htpasswd_path = "/home/$username";
+	$password = system("/usr/bin/pwgen -n1");
+	$hash = crypt($password, $username);
+	$login = "admin";
+	open ($htpasswd, ">>", "$htpasswd_path/.htpasswd") or die;
+	print $htpasswd "$login:$hash\n";
 	$auth = "AuthType Basic\nAuthName \"Administration zone\"\nAuthUserFile \"$htpasswd_path/.htpasswd\"\nRequire valid-user\n";
+	print $htaccess $auth;
 	my $uid = getpwnam($username);
 	my $gid = getgrnam($username);
 	chown $uid, $gid, "$document_root/$admin_path/.htaccess";
+	chown $uid, $gid, "$htpasswd_path/.htpasswd";
 }
